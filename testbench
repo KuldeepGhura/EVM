@@ -1,0 +1,24 @@
+module evm_system_tb;
+reg [7:0] biometric_hash;
+reg scan;
+reg cast_vote;
+reg [1:0] vote_sel;
+wire valid_voter;
+wire [2:0] voter_index;
+wire allow_vote;
+wire [7:0] candidate_A_votes;
+wire [7:0] candidate_B_votes;
+wire [7:0] candidate_C_votes;
+wire [7:0] nota_votes;
+/*audit log wires*/
+wire [2:0] log_voter0, log_voter1, log_voter2, log_voter3, log_voter4, log_voter5, log_voter6, log_voter7;
+wire [1:0] log_vote0, log_vote1, log_vote2, log_vote3, log_vote4, log_vote5, log_vote6, log_vote7;
+/* result file handle */
+integer file;
+/* Authentication */
+auth_module auth(
+    .biometric_hash(biometric_hash),
+    .scan(scan),
+    .valid_voter(valid_voter),
+    .voter_index(voter_index)
+);
