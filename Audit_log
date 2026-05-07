@@ -1,0 +1,80 @@
+audit_log audit(
+    .allow_vote(allow_vote),
+    .cast_vote(cast_vote),
+    .voter_index(voter_index),
+    .vote_sel(vote_sel),
+    .log_voter0(log_voter0), .log_voter1(log_voter1),
+    .log_voter2(log_voter2), .log_voter3(log_voter3),
+    .log_voter4(log_voter4), .log_voter5(log_voter5),
+    .log_voter6(log_voter6), .log_voter7(log_voter7),
+    .log_vote0(log_vote0), .log_vote1(log_vote1),
+    .log_vote2(log_vote2), .log_vote3(log_vote3),
+    .log_vote4(log_vote4), .log_vote5(log_vote5),
+    .log_vote6(log_vote6), .log_vote7(log_vote7)
+);
+initial begin
+    $dumpfile("evm_wave.vcd");
+    $dumpvars(0,evm_system_tb);
+    scan = 0;
+    cast_vote = 0;
+    vote_sel = 0;
+    #10;
+    /* Voter 0 votes Candidate A */
+    scan = 1;
+    biometric_hash = 8'b10110011;
+    vote_sel = 2'b00;
+    #20;
+    cast_vote = 1;
+    #10;
+    cast_vote = 0;
+    #30
+    /* Voter 3 votes Candidate B */
+    biometric_hash = 8'b00110011;
+    vote_sel = 2'b01;
+    #20;
+    cast_vote = 1;
+    #10;
+    cast_vote = 0;
+    #30;
+    /* Voter 4 votes Candidate B */
+    biometric_hash = 8'b11100011;
+    vote_sel = 2'b01;
+    #20;
+    cast_vote = 1;
+    #10;
+    cast_vote = 0;
+    #30;
+/* Invalid Voter  */
+    biometric_hash = 8'b01100110;
+    vote_sel = 2'b01;
+    #20;
+    cast_vote = 1;
+    #10;
+    cast_vote = 0;
+    #30;
+    /* Voter 1 votes NOTA */
+    biometric_hash = 8'b01010101;
+    vote_sel = 2'b11;
+    #20;
+    cast_vote = 1;
+    #10;
+    cast_vote = 0;
+    #30;
+    /* Voter 3 tries to vote again */
+    biometric_hash = 8'b00110011;
+    vote_sel = 2'b10;
+    #20;
+    cast_vote = 1;
+    #10;
+    cast_vote = 0;
+    #50;
+    /* Write results to file */
+    file = $fopen("results.txt","w");
+    $fdisplay(file,"CandidateA=%d", candidate_A_votes);
+    $fdisplay(file,"CandidateB=%d", candidate_B_votes);
+    $fdisplay(file,"CandidateC=%d", candidate_C_votes);
+    $fdisplay(file,"NOTA=%d", nota_votes);
+    $fclose(file);
+    #10 $finish;
+end
+endmodule
