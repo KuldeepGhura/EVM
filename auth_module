@@ -1,0 +1,13 @@
+auth_module auth(
+    .biometric_hash(biometric_hash),
+    .scan(scan),
+    .valid_voter(valid_voter),
+    .voter_index(voter_index)
+);
+/* Voter Lock */
+voter_lock lock(
+    .valid_voter(valid_voter),
+    .voter_index(voter_index),
+    .cast_vote(cast_vote),
+    .allow_vote(allow_vote)
+);
